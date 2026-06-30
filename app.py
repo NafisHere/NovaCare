@@ -1,16 +1,15 @@
 from flask import Flask, jsonify, request, render_template, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
-import bcrypt, os 
+import bcrypt
 from datetime import datetime
-from dotenv import load_dotenv
-load_dotenv()
+
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-app.secret_key = os.getenv("SECRET_KEY")
+# Use SQLite file stored in project folder
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///Mydatabase.db"
+app.secret_key = "secret_key"
 
 db = SQLAlchemy(app)
-app.secret_key = 'secret_key'
 
 
 # User model
