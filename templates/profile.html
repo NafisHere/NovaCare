@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/ho.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a href="/dashboard" title="NovaCare Hospital Home">
+                  <img src="{{ url_for('static', filename='images/hosp.png') }}" alt="Hospital Logo" class="hero-logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'user_dashboard' %}active{% endif %}" href="/dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" aria-current="page" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'appointment' %}active{% endif %}" href="/appointment">Appointment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'payment' %}active{% endif %}" aria-current="page" href="/payment">Payment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'prescription' %}active{% endif %}" href="/prescription">Prescription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'help' %}active{% endif %}" href="/help">Help</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex ms-auto gap-2 align-items-center">
+                        <form class="d-flex position-relative me-2" role="search" action=" " method="GET" id="searchForm">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Search"
+                                aria-label="Search" id="searchInput" autocomplete="off">
+                            <div class="search-suggestions" id="searchSuggestions"></div>
+                        </form>
+                        <a href="/logout" class="btn btn-outline-danger me-2">Logout</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Content -->
+    <div class="container mt-4">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+            <button class="back-btn" onclick="history.back()">← Back</button>
+            <h1 class="text-center mb-0" style="color: #A3D8FF; flex: 1;">Profile</h1>
+        </div>
+        <div class="card p-4 shadow-sm" style="background: var(--bg-card);">
+            <h4 class="glow-heading" style="color: #A3D8FF; font-weight: 600; margin-bottom: 16px; animation: textGlow 3s ease-in-out infinite;">User Information</h4>
+            <p style="color: #ffffff;"><strong>Name:</strong> {{ user.name }}</p>
+            <p style="color: #ffffff;"><strong>Email:</strong> {{ user.email }}</p>
+
+            <hr>
+
+            <h4 class="glow-heading" style="color: #A3D8FF; font-weight: 600; margin-bottom: 16px; animation: textGlow 3s ease-in-out infinite;">Update Additional Information</h4>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="address" class="form-label" style="color: #c8c8d8;">Address</label>
+                    <input type="text" class="form-control" id="address" name="address"
+                        value="{{ patient_info.address or '' }}" placeholder="Enter your address">
+                </div>
+                <div class="mb-3">
+                    <label for="district" class="form-label" style="color: #c8c8d8;">District</label>
+                    <input type="text" class="form-control" id="district" name="district"
+                        value="{{ patient_info.district or '' }}" placeholder="Enter your district">
+                </div>
+                <div class="mb-3">
+                    <label for="post_no" class="form-label" style="color: #c8c8d8;">Phone Number</label>
+                    <input type="text" class="form-control" id="post_no" name="post_no"
+                        value="{{ patient_info.post_no or '' }}" placeholder="Enter your post number">
+                </div>
+                <div class="mb-3">
+                    <label for="blood_type" class="form-label" style="color: #c8c8d8;">Blood Group</label>
+                    <input type="text" class="form-control" id="blood_type" name="blood_type"
+                        value="{{ patient_info.blood_type or '' }}" placeholder="Enter your blood type">
+                </div>
+                <div class="mb-3">
+                    <label for="age" class="form-label" style="color: #c8c8d8;">Age</label>
+                    <input type="number" class="form-control" id="age" name="age"
+                        value="{{ patient_info.age or '' }}" placeholder="Enter your age">
+                </div>
+                <div class="mb-3">
+                    <label for="diabetes" class="form-label" style="color: #c8c8d8;">Diabetes</label>
+                    <select class="form-select" id="diabetes" name="diabetes">
+                        <option value="" disabled selected>Select</option>
+                        <option value="Yes" {% if patient_info and patient_info.diabetes == 'Yes' %}selected{% endif %}>
+                            Yes</option>
+                        <option value="No" {% if patient_info and patient_info.diabetes == 'No' %}selected{% endif %}>
+                            No</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>const searchSuggestionsData = [
+        'Home', 'Profile', 'Appointment', 'Payment', 'Prescription', 'Help',
+        'Doctor', 'Doctors', 'Pharmacist', 'Medicine', 'Healthcare',
+        'Register', 'Login', 'Logout', 'Store'
+      ];
+
+      function setupSearchSuggestions(inputId, suggestionsId) {
+        const input = document.getElementById(inputId);
+        const suggestionsBox = document.getElementById(suggestionsId);
+        if (!input || !suggestionsBox) return;
+
+        input.addEventListener('input', function() {
+          const val = this.value.toLowerCase();
+          suggestionsBox.innerHTML = '';
+          if (!val) {
+            suggestionsBox.style.display = 'none';
+            return;
+          }
+          const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+          if (matches.length > 0) {
+            suggestionsBox.style.display = 'block';
+            matches.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = item;
+              div.addEventListener('click', function() {
+                input.value = item;
+                suggestionsBox.style.display = 'none';
+              });
+              suggestionsBox.appendChild(div);
+            });
+          } else {
+            suggestionsBox.style.display = 'none';
+          }
+        });
+
+        input.addEventListener('focus', function() {
+          if (this.value.trim()) {
+            const val = this.value.toLowerCase();
+            const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+            if (matches.length > 0) {
+              suggestionsBox.style.display = 'block';
+              suggestionsBox.innerHTML = '';
+              matches.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = item;
+                div.addEventListener('click', function() {
+                  input.value = item;
+                  suggestionsBox.style.display = 'none';
+                });
+                suggestionsBox.appendChild(div);
+              });
+            }
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.style.display = 'none';
+          }
+        });
+      }
+
+      setupSearchSuggestions('searchInput', 'searchSuggestions');
+    </script>
+
+    <footer class="home-footer text-center text-body-secondary">
+        <div class="container">
+            <p class="mt-3 mb-2" style="color: var(--text-secondary);">@2026 All rights reserved to NovaCare Hospital</p>
+            <p class="mb-0"><a href="#">Back to top</a></p>
+        </div>
+    </footer>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - NovaCare Hospital</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/ho.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            padding: 28px 32px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 32, 78, 0.18);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            margin-bottom: 22px;
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--c1), var(--c4), var(--c2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-container i {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"],
+        .login-container select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 32, 78, 0.25);
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(8, 8, 20, 0.9) !important;
+            color: var(--text-primary) !important;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+
+        .login-container select {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23A3D8FF"><path d="M7 10l5 5 5-5H7z"/></svg>') no-repeat right 12px center;
+            background-size: 16px 16px;
+            padding-right: 40px;
+        }
+
+        .login-container input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-container input[type="checkbox"] {
+            margin-right: 6px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--c3), var(--c4));
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-container button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 22px rgba(160, 21, 62, 0.5);
+        }
+
+        .login-container p {
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .login-container p a {
+            color: var(--c1);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-container p a:hover {
+            color: var(--c4);
+            text-shadow: 0 0 10px rgba(0, 34, 77, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="alert-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <strong>{{ category.capitalize() }}:</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="login-container">
+        <h1>Register</h1>
+        <form action="/other_register" method="post">
+            <input type="text" placeholder="Username" name="name" required>
+            <input type="text" placeholder="Email" name="email" required>
+            <select name="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="doctor">Doctor</option>
+                <option value="pharmacist">Pharmacist</option>
+                <option value="admin">Admin</option>
+            </select>
+            <input type="password" placeholder="Password" name="password" required autocomplete="off">
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember">Remember me</label>
+            </div>
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="/other_login">Login</a></p>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

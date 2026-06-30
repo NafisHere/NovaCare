@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/ho.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: transparent;
+        }
+
+        .doctor-card {
+            background: var(--card-bg);
+            border: 1px solid #e3e6f0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .doctor-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .doctor-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .doctor-header span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .doctor-info {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .doctor-info strong {
+            color: var(--c1);
+        }
+
+        .btn-appointment {
+            background: linear-gradient(135deg, var(--c3), var(--c4));
+            color: #fff;
+            border: none;
+        }
+
+        .btn-appointment:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 22px rgba(255, 0, 135, 0.5);
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a href="/dashboard" title="NovaCare Hospital Home">
+                  <img src="{{ url_for('static', filename='images/hosp.png') }}" alt="Hospital Logo" class="hero-logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'user_dashboard' %}active{% endif %}" href="/dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" aria-current="page" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'appointment' %}active{% endif %}" href="/appointment">Appointment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'payment' %}active{% endif %}" aria-current="page" href="/payment">Payment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'prescription' %}active{% endif %}" href="/prescription">Prescription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'help' %}active{% endif %}" href="/help">Help</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex ms-auto gap-2 align-items-center">
+                        <form class="d-flex position-relative me-2" role="search" action=" " method="GET" id="searchForm">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Search"
+                                aria-label="Search" id="searchInput" autocomplete="off">
+                            <div class="search-suggestions" id="searchSuggestions"></div>
+                        </form>
+                        <a href="/logout" class="btn btn-outline-danger me-2">Logout</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+        <main class="container mt-5" style="background: transparent;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+            <button class="back-btn" onclick="history.back()">← Back</button>
+            <h1 class="text-center mb-0" style="color: #A3D8FF; flex: 1;">Book Your Appointment</h1>
+        </div>
+        <div class="row">
+            {% for doctor in doctors %}
+            <div class="col-md-6 col-lg-4">
+                <div class="doctor-card">
+                    <div class="doctor-header">
+                        <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Doctor Profile Picture">
+                        <div>
+                            <h4>{{ doctor.name }}</h4>
+                            <span>{{ doctor.specialization }}</span>
+                        </div>
+                    </div>
+                    <div class="doctor-info">
+                        <p><strong>Email:</strong> {{ doctor.email }}</p>
+                        <p><strong>Experience (years):</strong> {{ doctor.experience }}</p>
+                        <p><strong>Contact:</strong> {{ doctor.contact }}</p>
+                        <p><strong>Chamber Address:</strong> {{ doctor.address }}</p>
+                        <p><strong>Available Slots:</strong> {{ doctor.slots }} on {{ doctor.day }}</p>
+                        <p><strong>Fees:</strong> {{ doctor.fees }}</p>
+                    </div>
+                    <button onclick="location.href='/appointment_form'" class="btn btn-appointment w-100">Book Appointment</button>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    No doctors are available at the moment. Please check back later.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>const searchSuggestionsData = [
+        'Home', 'Profile', 'Appointment', 'Payment', 'Prescription', 'Help',
+        'Doctor', 'Doctors', 'Pharmacist', 'Medicine', 'Healthcare',
+        'Register', 'Login', 'Logout', 'Store'
+      ];
+
+      function setupSearchSuggestions(inputId, suggestionsId) {
+        const input = document.getElementById(inputId);
+        const suggestionsBox = document.getElementById(suggestionsId);
+        if (!input || !suggestionsBox) return;
+
+        input.addEventListener('input', function() {
+          const val = this.value.toLowerCase();
+          suggestionsBox.innerHTML = '';
+          if (!val) {
+            suggestionsBox.style.display = 'none';
+            return;
+          }
+          const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+          if (matches.length > 0) {
+            suggestionsBox.style.display = 'block';
+            matches.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = item;
+              div.addEventListener('click', function() {
+                input.value = item;
+                suggestionsBox.style.display = 'none';
+              });
+              suggestionsBox.appendChild(div);
+            });
+          } else {
+            suggestionsBox.style.display = 'none';
+          }
+        });
+
+        input.addEventListener('focus', function() {
+          if (this.value.trim()) {
+            const val = this.value.toLowerCase();
+            const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+            if (matches.length > 0) {
+              suggestionsBox.style.display = 'block';
+              suggestionsBox.innerHTML = '';
+              matches.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = item;
+                div.addEventListener('click', function() {
+                  input.value = item;
+                  suggestionsBox.style.display = 'none';
+                });
+                suggestionsBox.appendChild(div);
+              });
+            }
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.style.display = 'none';
+          }
+        });
+      }
+
+      setupSearchSuggestions('searchInput', 'searchSuggestions');
+    </script>
+    <footer class="home-footer text-center text-body-secondary">
+        <div class="container">
+            <p class="mt-3 mb-2" style="color: var(--text-secondary);">@2026 All rights reserved to NovaCare Hospital</p>
+            <p class="mb-0"><a href="#">Back to top</a></p>
+        </div>
+    </footer>
+
+</html>

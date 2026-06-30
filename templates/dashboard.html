@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaCare Hospital - Dashboard</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/ho.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="alert-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <strong>{{ category.capitalize() }}:</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a href="/dashboard" title="NovaCare Hospital Home">
+                  <img src="{{ url_for('static', filename='images/hosp.png') }}" alt="Hospital Logo" class="hero-logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'user_dashboard' %}active{% endif %}" aria-current="page" href="/dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'appointment' %}active{% endif %}" href="/appointment">Appointment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'payment' %}active{% endif %}" href="/payment">Payment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'prescription' %}active{% endif %}" href="/prescription">Prescription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'help' %}active{% endif %}" href="/help">Help</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex ms-auto gap-2 align-items-center">
+                        <form class="d-flex position-relative me-2" role="search" action=" " method="GET" id="searchForm">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Search"
+                                aria-label="Search" id="searchInput" autocomplete="off">
+                            <div class="search-suggestions" id="searchSuggestions"></div>
+                        </form>
+                        <a href="/logout" class="btn btn-outline-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <style>
+            body {
+                background: transparent;
+            }
+            .carousel {
+                width: 100%;
+                max-width: 100%;
+                height: 620px;
+                margin: 0;
+            }
+
+            .carousel-item img {
+                width: 100%;
+                height: 620px;
+                object-fit: cover;
+            }
+
+            .marketing h2 {
+                margin-top: 1.5rem;
+            }
+
+            .featurette-heading {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-size: 2.4rem;
+            }
+
+            .lead-animated {
+                font-size: 1.15rem;
+                line-height: 1.7;
+            }
+
+            .section-title {
+                font-size: 2.6rem;
+                margin-bottom: 1rem;
+            }
+
+            .section-divider {
+                height: 2px;
+                background: linear-gradient(90deg, transparent, var(--c1), var(--c4), transparent);
+                margin: 0 auto 3rem auto;
+                max-width: 320px;
+                border: none;
+            }
+        </style>
+
+        <!-- Carousel Section -->
+        <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="3000">
+                    <img src="{{ url_for('static', filename='images/hos4.jpg') }}" class="d-block w-100" alt="Image Description">
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <img src="{{ url_for('static', filename='images/hos3.jpg') }}" class="d-block w-100" alt="Image Description">
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <img src="{{ url_for('static', filename='images/hos2.jpg') }}" class="d-block w-100" alt="Image Description">
+                </div>
+                
+                <div class="carousel-item" data-bs-interval="3000">
+                    <img src="{{ url_for('static', filename='images/hos6.jpg') }}" class="d-block w-100" alt="Image Description">
+                </div>
+            </div>
+            </div>
+
+        <div class="carousel-nav-below">
+            <span class="carousel-btn" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">&#8249;</span>
+            <span class="carousel-btn" data-bs-target="#carouselExampleInterval" data-bs-slide="next">&#8250;</span>
+        </div>
+
+        <!-- Marketing Section -->
+        <div class="container marketing my-3" style="background: var(--bg-card);">
+            <h2 class="section-title text-center" style="color: #BE3144;">Hospital Description</h2>
+            <hr class="section-divider">
+
+            <div class="row featurette" style="background: var(--bg-card);">
+                <div class="col-md-6 order-md-2">
+                    <h2 class="featurette-heading">Doctors</h2>
+                    <h4 style="color: #BE3144; font-weight: 600; font-size: 1.3rem;">Experienced and highly skilled</h4>
+                    <p class="lead lead-animated">Experience exceptional care and expertise with our team of doctors...</p>
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <img class="featurette-image img-fluid mx-auto" width="650" height="500"
+                        src="{{ url_for('static', filename='images/hos7.jpg') }}" alt="Doctors">
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette" style="background: var(--bg-card);">
+                <div class="col-md-6">
+                    <h2 class="featurette-heading">Healthcare</h2>
+                    <h4 style="color: #BE3144; font-weight: 600; font-size: 1.3rem;">Experience best treatment</h4>
+                    <p class="lead lead-animated">Discover a new standard of excellence with our healthcare services...</p>
+                </div>
+                <div class="col-md-6">
+                    <img class="featurette-image img-fluid mx-auto" width="650" height="500"
+                        src="{{ url_for('static', filename='images/3.jpg') }}" alt="Healthcare">
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette" style="background: var(--bg-card);">
+                <div class="col-md-6 order-md-2">
+                    <h2 class="featurette-heading">Medicine</h2>
+                    <h4 style="color: #BE3144; font-weight: 600; font-size: 1.3rem;">Local and international available</h4>
+                    <p class="lead lead-animated">Trust in the quality and effectiveness of our medicines...</p>
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <img class="featurette-image img-fluid mx-auto" width="650" height="500"
+                        src="{{ url_for('static', filename='images/med.jfif') }}" alt="Medicine">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="home-footer text-center text-body-secondary">
+            <div class="container">
+                <h2>Experience the Care and Support</h2>
+                <h5>Schedule your appointment Now!</h5>
+                <p class="mt-3 mb-2" style="color: var(--text-secondary);">@2026 All rights reserved to NovaCare Hospital</p>
+                <p class="mb-0"><a href="#">Back to top</a></p>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    setTimeout(function() {
+                        var bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 3000);
+                });
+            });
+
+            const searchSuggestionsData = [
+                'Home', 'Profile', 'Appointment', 'Payment', 'Prescription', 'Help',
+                'Doctor', 'Doctors', 'Pharmacist', 'Medicine', 'Healthcare',
+                'Register', 'Login', 'Logout', 'Store'
+            ];
+
+            function setupSearchSuggestions(inputId, suggestionsId) {
+                const input = document.getElementById(inputId);
+                const suggestionsBox = document.getElementById(suggestionsId);
+                if (!input || !suggestionsBox) return;
+
+                input.addEventListener('input', function() {
+                    const val = this.value.toLowerCase();
+                    suggestionsBox.innerHTML = '';
+                    if (!val) {
+                        suggestionsBox.style.display = 'none';
+                        return;
+                    }
+                    const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+                    if (matches.length > 0) {
+                        suggestionsBox.style.display = 'block';
+                        matches.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'suggestion-item';
+                            div.textContent = item;
+                            div.addEventListener('click', function() {
+                                input.value = item;
+                                suggestionsBox.style.display = 'none';
+                            });
+                            suggestionsBox.appendChild(div);
+                        });
+                    } else {
+                        suggestionsBox.style.display = 'none';
+                    }
+                });
+
+                input.addEventListener('focus', function() {
+                    if (this.value.trim()) {
+                        const val = this.value.toLowerCase();
+                        const matches = searchSuggestionsData.filter(item => item.toLowerCase().includes(val));
+                        if (matches.length > 0) {
+                            suggestionsBox.style.display = 'block';
+                            suggestionsBox.innerHTML = '';
+                            matches.forEach(item => {
+                                const div = document.createElement('div');
+                                div.className = 'suggestion-item';
+                                div.textContent = item;
+                                div.addEventListener('click', function() {
+                                    input.value = item;
+                                    suggestionsBox.style.display = 'none';
+                                });
+                                suggestionsBox.appendChild(div);
+                            });
+                        }
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                        suggestionsBox.style.display = 'none';
+                    }
+                });
+            }
+
+            setupSearchSuggestions('searchInput', 'searchSuggestions');
+        </script>
+    </main>
+
+</body>
+
+</html>
